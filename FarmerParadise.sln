@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmerParadiseTelegramMiniApp", "FarmerParadiseTelegramMiniApp\FarmerParadiseTelegramMiniApp.csproj", "{AFD37BD3-4587-43B8-91B7-14C1E3D18161}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFD37BD3-4587-43B8-91B7-14C1E3D18161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD37BD3-4587-43B8-91B7-14C1E3D18161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD37BD3-4587-43B8-91B7-14C1E3D18161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD37BD3-4587-43B8-91B7-14C1E3D18161}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A023E70-402D-41D0-A20D-305B3A56720F}
+	EndGlobalSection
+EndGlobal
