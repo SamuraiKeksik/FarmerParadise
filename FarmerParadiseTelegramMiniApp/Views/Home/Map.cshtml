@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "КартА";
+}
+
+<h2 style="text-align: center;">Главная карта</h2>
+
+<div id="grid-container" style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+    <table class="table table-bordered" style="width: auto; margin: auto; text-align: center;">
+        @for (int row = 0; row < 10; row++)
+        {
+            <tr>
+                @for (int col = 0; col < 10; col++)
+                {
+                    int cellNumber = row * 10 + col + 1;
+                    <td data-row="@row" data-col="@col"
+                        style="width: 50px; height: 50px; vertical-align: middle; text-align: center; cursor: pointer;">
+                        @cellNumber
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#grid-container td").click(function () {
+                var cellNumber = parseInt($(this).text().trim()); // Убираем лишние пробелы и приводим к числу
+                if (!isNaN(cellNumber)) { // Проверяем, что это число
+                    var url = '@Url.Action("SubMap", "Home")' + '?mainNumber=' + encodeURIComponent(cellNumber);
+                    window.location.href = url;
+                }
+            });
+        });
+    </script>
+
+
+    <style>
+        /* Зелёная обводка при наведении на ячейку */
+        table.table-bordered td:hover {
+            border: 2px solid green !important;
+        }
+    </style>
+}
+

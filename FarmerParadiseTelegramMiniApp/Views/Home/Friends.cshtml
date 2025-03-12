@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Друзья";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Друзья</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-6">
+    <div class="max-w-md mx-auto space-y-6 text-center">
+        <!-- Баланс -->
+        <div class="bg-gray-900 p-4 rounded-lg shadow-md">
+            <p class="text-lg font-bold">0</p>
+            <button class="bg-gray-700 hover:bg-gray-800 transition px-5 py-2 rounded-lg mt-3 w-full font-semibold shadow-md">Получить</button>
+            <p class="text-xs mt-2">Приглашайти друзей в команду<br>Становитесь активных представителем сообщества </p>
+        </div>
+
+        <!-- Приглашение друзей -->
+        <div class="bg-gray-900 p-4 rounded-lg shadow-md">
+            <div class="mb-4 p-4 bg-orange-700 rounded-lg">
+                <p class="text-sm font-bold">Приглашай друзей </p>
+                <p class="text-lg font-bold">💰 10 Waxw за каждого друга</p>
+            </div>
+            
+        </div>
+
+        <!-- Список друзей -->
+        <div class="bg-gray-900 p-4 rounded-lg shadow-md">
+            <h2 class="text-lg font-bold mb-2">1 Друг</h2>
+            <div class="p-4 bg-orange-700 rounded-lg flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gray-800 text-white font-bold rounded-full w-10 h-10 flex items-center justify-center text-lg">AI</div>
+                    <span class="font-semibold">Имя друга</span>
+                </div>
+                <p class="font-bold"> 5 Waxw</p>
+            </div>
+        </div>
+
+        <!-- Кнопка приглашения -->
+        <button class="bg-green-500 hover:bg-green-600 transition px-5 py-3 rounded-lg w-full font-semibold shadow-md flex items-center justify-center">
+            Пригласить друга
+            <span class="ml-2"></span>
+        </button>
+    </div>
+</body>
+</html>
+

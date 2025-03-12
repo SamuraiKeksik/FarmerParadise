@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Связь";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Связь</h2>
+
+<p>Заполните форму для связи с нами:</p>
+<form>
+    <div class="form-group">
+        <label for="name">Имя:</label>
+        <input type="text" class="form-control" id="name" placeholder="Введите имя" />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" placeholder="Введите email" />
+    </div>
+    <div class="form-group">
+        <label for="message">Сообщение:</label>
+        <textarea class="form-control" id="message" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+</form>

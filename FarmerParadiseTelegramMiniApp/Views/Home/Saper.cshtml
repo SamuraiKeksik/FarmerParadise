@@ -1,0 +1,193 @@
+﻿@{
+    ViewData["Title"] = "Сапёр";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сапёр</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 30px);
+            gap: 2px;
+            margin: 20px auto;
+            justify-content: center;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: gray;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+            .cell.open {
+                background-color: lightgray;
+            }
+
+            .cell.flag {
+                background-color: red;
+            }
+
+            .cell.bomb {
+                background-color: black;
+                color: white;
+            }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="flex flex-col items-center ">
+        <div class="flex justify-center gap-10 mb-4">
+            <p>Бомбы: <span id="bomb-count">1</span></p>
+            <p >Флаги: <span id="flag-count">0</span></p>
+            <button id="shield-button" class="bg-blue-100 px-4  rounded-lg flex items-center">
+                🛡
+            </button>
+        </div>
+        
+    </div>
+
+    <div id="game-container" class="text-center mt-4">
+        <div id="game-board" class="grid"></div>
+        <p id="game-message" class="mt-4 text-lg font-bold"></p>
+        <button id="restart-button" class="hidden bg-red-500 px-4 py-2 rounded-lg mt-4" onclick="window.location.href='@Url.Action("Index", "Home")'">
+            Вернуться на ферму
+        </button>
+    </div>
+
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function () {
+            startGame();
+        });
+
+        const rows = 10, cols = 10, bombsCount = 1;
+        let board = [], revealedCount = 0;
+        const totalSafeCells = rows * cols - bombsCount;
+
+        function startGame() {
+            document.getElementById('restart-button').classList.add('hidden');
+            document.getElementById('game-message').textContent = '';
+            revealedCount = 0;
+            generateBoard();
+        }
+
+        function generateBoard() {
+            board = Array.from({ length: rows }, () => Array.from({ length: cols }, () => ({
+                bomb: false, revealed: false, flag: false, count: 0
+            })));
+
+            placeBombs();
+            calculateNumbers();
+            renderBoard();
+        }
+
+        function placeBombs() {
+            let placed = 0;
+            while (placed < bombsCount) {
+                let r = Math.floor(Math.random() * rows);
+                let c = Math.floor(Math.random() * cols);
+                if (!board[r][c].bomb) {
+                    board[r][c].bomb = true;
+                    placed++;
+                }
+            }
+        }
+
+        function calculateNumbers() {
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (board[r][c].bomb) continue;
+                    let count = 0;
+                    for (let dr of [-1, 0, 1]) {
+                        for (let dc of [-1, 0, 1]) {
+                            let nr = r + dr, nc = c + dc;
+                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].bomb) count++;
+                        }
+                    }
+                    board[r][c].count = count;
+                }
+            }
+        }
+
+        function renderBoard() {
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.innerHTML = '';
+            board.forEach((row, r) => {
+                row.forEach((cell, c) => {
+                    let div = document.createElement('div');
+                    div.id = `cell-${r}-${c}`;
+                    div.className = 'cell';
+                    div.addEventListener('click', () => openCell(r, c));
+                    div.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        toggleFlag(r, c);
+                    });
+                    gameBoard.appendChild(div);
+                });
+            });
+        }
+
+        function openCell(r, c) {
+            if (board[r][c].flag || board[r][c].revealed) return;
+
+            let cellDiv = document.getElementById(`cell-${r}-${c}`);
+            board[r][c].revealed = true;
+
+            if (board[r][c].bomb) {
+                revealAllBombs();
+                document.getElementById('game-message').textContent = 'Вы проиграли!';
+                document.getElementById('restart-button').classList.remove('hidden');
+            } else {
+                revealedCount++;
+                cellDiv.classList.add('open');
+                cellDiv.textContent = board[r][c].count || '';
+
+                if (revealedCount === totalSafeCells) {
+                    document.getElementById('game-message').textContent = 'Вы выиграли! Ваша награда – 1 зерно';
+                    document.getElementById('restart-button').classList.remove('hidden');
+                }
+
+                if (board[r][c].count === 0) {
+                    for (let dr of [-1, 0, 1]) {
+                        for (let dc of [-1, 0, 1]) {
+                            let nr = r + dr, nc = c + dc;
+                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !board[nr][nc].revealed) {
+                                openCell(nr, nc);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function toggleFlag(r, c) {
+            if (board[r][c].revealed) return;
+            board[r][c].flag = !board[r][c].flag;
+            let cellDiv = document.getElementById(`cell-${r}-${c}`);
+            cellDiv.classList.toggle('flag', board[r][c].flag);
+            document.getElementById('flag-count').textContent = document.querySelectorAll('.flag').length;
+        }
+
+        function revealAllBombs() {
+            board.forEach((row, r) => {
+                row.forEach((cell, c) => {
+                    if (cell.bomb) {
+                        let cellDiv = document.getElementById(`cell-${r}-${c}`);
+                        cellDiv.classList.add('bomb');
+                        cellDiv.textContent = '💣';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

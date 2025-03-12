@@ -1,0 +1,172 @@
+﻿@{
+    ViewData["Title"] = "Аукционы";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аукционы</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hover-scale:hover {
+            transform: scale(1.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            background-size: 200% 200%;
+            animation: gradientAnimation 5s ease infinite;
+        }
+        .card-map {
+            background: linear-gradient(45deg, #a3e635, #3b82f6);
+        }
+        .card-auction {
+            background: linear-gradient(45deg, #d8b4fe, #9333ea);
+        }
+
+        @@keyframes gradientAnimation {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white p-6">
+    <div class="max-w-md mx-auto space-y-6">
+        <!-- Баланс -->
+        <div class="flex items-center justify-between bg-gray-800 p-4 rounded-lg shadow-md">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-500 text-white font-bold rounded-full w-10 h-10 flex items-center justify-center text-lg">Я</div>
+                <div>
+                    <p class="text-gray-400 text-sm">Баланс</p>
+                    <p class="text-2xl font-bold">1 Auct</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Поле для ввода кошелька -->
+        <div class="bg-gray-800 p-4 rounded-lg shadow-md" style="padding-bottom: 50px;">
+            <p class="text-lg font-bold mb-2">Адрес кошелька</p>
+            <div class="flex space-x-2" style="padding-bottom: 25px;">
+                
+                <input type="text" id="wallet-input" placeholder="Введите адрес..." class="w-full p-2 rounded-lg bg-gray-900 text-white">
+                <button id="save-wallet" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-semibold shadow-md">Сохранить</button>
+
+            </div>
+            <p id="wallet-display" class="mt-2 text-lg cursor-pointer hidden">*******************************</p>
+            <!-- Кнопка обменять -->
+            <div class="text-center">
+                <button id="exchange-button" class="bg-red-500 hover:bg-brown-300 transition px-6 py-3 rounded-lg text-white text-lg font-bold shadow-md w-full">Обменять Ton на Auct</button>
+                <p class="text-gray-400 text-sm">Информация об обмене </p>
+            </div>
+        </div>
+
+        <!-- Карта и Аукцион -->
+        <div class="flex space-x-4">
+            <div id="map" class="card card-map w-1/2 hover-scale cursor-pointer"
+                 style="padding-bottom: 200px; padding-top: 200px;">
+                Карта
+            </div>
+            <div id="auction" class="card card-auction w-1/2 hover-scale cursor-pointer"
+                 style="padding-bottom: 200px; padding-top: 200px;">
+                Аукцион
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div id="exchange-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-gray-800 p-6 rounded-lg max-w-md w-full relative">
+            <!-- Контент для случая, когда адрес сохранён -->
+            <div id="modal-saved" class="hidden flex flex-col items-center">
+                <img src="~/img/wallet.svg" alt="Exchange Image" width="200" height="200" style="margin-bottom:30px;">
+                <p>Ваш адрес</p>
+                <p id="modal-wallet-address" style="margin-bottom:30px;"> </p>
+                <p style="margin-bottom:30px;">минимальное пополнение от 3 ton, сумма менее будет отправлена в общий счёт</p>
+                <button id="close-modal-saved" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">Закрыть окно</button>
+            </div>
+            <!-- Контент для случая, когда адрес не сохранён -->
+            <div id="modal-unsaved" class="hidden flex flex-col items-center">
+                <p style="margin-bottom:30px;">напишите и сохраните адрес</p>
+                <button id="close-modal-unsaved" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">Закрыть окно</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('save-wallet').addEventListener('click', function () {
+            let walletInput = document.getElementById('wallet-input');
+            let walletDisplay = document.getElementById('wallet-display');
+
+            if (walletInput.value.trim() !== "") {
+                // Сохраняем введенный адрес в data-атрибуте
+                walletDisplay.setAttribute('data-wallet', walletInput.value);
+
+                // Показываем звездочки вместо введенного адреса
+                walletDisplay.textContent = "**********";
+                walletDisplay.classList.remove('hidden');
+                walletInput.classList.add('hidden');
+                this.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('wallet-display').addEventListener('click', function () {
+            let walletInput = document.getElementById('wallet-input');
+            let saveButton = document.getElementById('save-wallet');
+
+            walletInput.classList.remove('hidden');
+            saveButton.classList.remove('hidden');
+            this.classList.add('hidden');
+        });
+
+        // Обработчик нажатия на кнопку "Обменять Ton на Auct"
+        document.getElementById('exchange-button').addEventListener('click', function () {
+            let walletDisplay = document.getElementById('wallet-display');
+            let modal = document.getElementById('exchange-modal');
+            let modalSaved = document.getElementById('modal-saved');
+            let modalUnsaved = document.getElementById('modal-unsaved');
+            let modalWalletAddress = document.getElementById('modal-wallet-address');
+
+            if (walletDisplay.classList.contains('hidden')) {
+                modalUnsaved.classList.remove('hidden');
+                modalSaved.classList.add('hidden');
+            } else {
+                // Получаем сохраненный адрес из data-атрибута
+                let savedAddress = walletDisplay.getAttribute('data-wallet') || "Нет данных";
+                modalWalletAddress.textContent = savedAddress;
+                modalSaved.classList.remove('hidden');
+                modalUnsaved.classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
+        });
+
+        // Обработчики закрытия модальных окон
+        document.getElementById('close-modal-saved').addEventListener('click', function () {
+            document.getElementById('exchange-modal').classList.add('hidden');
+        });
+
+        document.getElementById('close-modal-unsaved').addEventListener('click', function () {
+            document.getElementById('exchange-modal').classList.add('hidden');
+        });
+    </script>
+    <script>
+        document.getElementById('map').addEventListener('click', function () {
+            window.location.href = "/Home/Map";
+        });
+
+        document.getElementById('auction').addEventListener('click', function () {
+            window.location.href = "/Home/...";
+        });
+    </script>
+</body>
+</html>

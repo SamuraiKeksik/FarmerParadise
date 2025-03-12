@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Профиль";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="bg-gray-800 p-5 rounded-lg shadow-lg">
+    <div class="flex justify-around">
+        <button id="tab-create" class="px-4 py-2 bg-blue-500 rounded-lg text-white">Создание Waxw</button>
+        <button id="tab-economy" class="px-4 py-2 bg-gray-700 rounded-lg text-white">Экономика</button>
+    </div>
+
+    <!-- Раздел "Создание Waxw" -->
+    <div id="create-section" class="mt-5 text-center">
+        <button class="bg-green-500 hover:bg-green-600 transition px-5 py-2 rounded-lg w-full font-semibold shadow-md">
+            Подключить кошелек
+        </button>
+        <p class="text-lg font-semibold mt-4">Количество Waxw: 10</p>
+
+        <p class="text-center text-gray-400 mt-2">Создание Waxw требует:</p>
+        <ul class="text-gray-300 text-sm">
+            <li>Зерно: 100 (у вас 50)</li>
+            <li>Курицы: 5 (у вас 3)</li>
+            <li>Удобрения: 10 (у вас 8)</li>
+        </ul>
+
+        <div class="mt-4 flex items-center justify-center">
+            <button class="bg-gray-600 px-3 py-2 rounded-l" id="decrease">-</button>
+            <input type="number" id="amount" class="w-16 text-center bg-gray-900 border border-gray-700" value="1" min="1">
+            <button class="bg-gray-600 px-3 py-2 rounded-r" id="increase">+</button>
+        </div>
+
+        <button class="text-center bg-yellow-500 hover:bg-yellow-600 transition px-5 py-2 rounded-lg mt-4 w-full font-semibold shadow-md">
+            Создать
+        </button>
+        <p class="text-red-400 text-sm mt-2 text-center">Ресурсы исчезнут безвозвратно</p>
+
+        <div class="flex flex-col items-center mt-10">
+            <h6 class="text-center text-xl font-bold mb-2">Количество Waxw</h6>
+            <h6 class="text-center text-xl font-bold mb-2">63.499.999 / 63.500.000 Waxw</h6>
+        </div>
+       
+    </div>
+
+    <!-- Раздел "Экономика" -->
+    <div id="economy-section" class="mt-5 hidden text-center">
+        <h2 class="text-xl font-bold mb-2">Экономика Waxw</h2>
+        
+
+        <div class="flex justify-center mt-5">
+            <canvas id="economyChart" width="400" height="400"></canvas>
+        </div>
+        <p class="text-gray-300 text-sm mt-4 text-left ">
+            Этап 1: Раздача токенов<br>
+            Этап 2: Создание платформы для создателей игр<br>
+            Этап 3: Подключение игр к системе <br>
+            Этап 3: Развитие экосистемы 
+        </p>
+    </div>
+ 
+</div>
+
+<script>
+    document.getElementById('tab-create').addEventListener('click', function () {
+        document.getElementById('create-section').classList.remove('hidden');
+        document.getElementById('economy-section').classList.add('hidden');
+    });
+
+    document.getElementById('tab-economy').addEventListener('click', function () {
+        document.getElementById('create-section').classList.add('hidden');
+        document.getElementById('economy-section').classList.remove('hidden');
+    });
+
+    document.getElementById('increase').addEventListener('click', function () {
+        let input = document.getElementById('amount');
+        input.value = parseInt(input.value) + 1;
+    });
+
+    document.getElementById('decrease').addEventListener('click', function () {
+        let input = document.getElementById('amount');
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    });
+
+    // Круговая диаграмма
+    
+        var ctx = document.getElementById('economyChart').getContext('2d');
+    var economyChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ["Айрдроп", "Маркетинг", "Платформы", "Команда", "Ликвидность"],
+            datasets: [{
+                data: [65000000, 13000000, 19500000, 19500000, 13000000],
+                backgroundColor: ['#4285F4', '#FBBC05', '#34A853', '#EA4335', '#FF8C00'],
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            let label = context.label || '';
+                            let value = context.raw.toLocaleString(); // Форматируем число с разделением тысяч
+                            return `${label}: ${value} Waxw`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
