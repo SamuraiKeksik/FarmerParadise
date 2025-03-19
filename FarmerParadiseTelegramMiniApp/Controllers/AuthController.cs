@@ -31,6 +31,11 @@ namespace FarmerParadiseTelegramMiniApp.Controllers
         [HttpPost]
         public async Task<ObjectResult> Login([FromBody] TelegramInitData initData)
         {
+            //await _signInManager.SignOutAsync();
+            //var user = _context.Users.First();
+            //await _signInManager.SignInAsync(user, true);
+            //return Ok(new { Message = "Authenticated"});
+
             if (string.IsNullOrEmpty(initData.InitData))
                 return BadRequest("InitData is missing.");
 
@@ -47,8 +52,11 @@ namespace FarmerParadiseTelegramMiniApp.Controllers
             if (user != null)
             {
                 await _signInManager.SignOutAsync();
+
+                user.PhotoUrl = parsedUser.Photo_Url;
+                await _userManager.UpdateAsync(user);
                 await _signInManager.SignInAsync(user, true);
-                return Ok(new { Message = "Authenticated"});
+                return Ok(new { Message = "Authenticated" });
             }
 
             else
@@ -56,14 +64,15 @@ namespace FarmerParadiseTelegramMiniApp.Controllers
                 AppUser newUser = new AppUser()
                 {
                     Id = parsedUser.Id.ToString(),
-                    UserName = parsedUser.Username,                    
+                    UserName = parsedUser.Username,
+                    PhotoUrl = parsedUser.Photo_Url,
                 };
                 IdentityResult result = await _userManager.CreateAsync(newUser);
                 if (result.Succeeded)
                 {
                     await _signInManager.SignOutAsync();
                     await _signInManager.SignInAsync(newUser, true);
-                    return Ok(new { Message = "Authenticated"});
+                    return Ok(new { Message = "Authenticated" });
                 }
                 else
                 {
@@ -112,10 +121,10 @@ namespace FarmerParadiseTelegramMiniApp.Controllers
     public class TelegramUser
     {
         public long Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string First_Name { get; set; }
+        public string Last_Name { get; set; }
         public string Username { get; set; }
-        public string PhotoUrl { get; set; }
+        public string Photo_Url { get; set; }
     }
 }
 

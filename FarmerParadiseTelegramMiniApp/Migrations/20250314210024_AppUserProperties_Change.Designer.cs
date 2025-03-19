@@ -4,6 +4,7 @@ using FarmerParadiseTelegramMiniApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmerParadiseTelegramMiniApp.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    partial class AppIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314210024_AppUserProperties_Change")]
+    partial class AppUserProperties_Change
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +34,6 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<long>("Aucts")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("BarnLevel")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -57,9 +57,6 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsGameAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRouletteAvailable")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -109,9 +106,6 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<long>("Water")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("WaterTowerLevel")
                         .HasColumnType("bigint");
 
                     b.Property<long>("Waxws")

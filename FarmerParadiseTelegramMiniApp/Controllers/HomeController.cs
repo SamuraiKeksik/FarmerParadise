@@ -13,6 +13,7 @@ public class HomeController : Controller
     private readonly AppIdentityDbContext _context;
     private UserManager<AppUser> _userManager;  
     private readonly ILogger<HomeController> _logger;
+    private const uint MaxGrainMultiplier = 100;
 
     public HomeController(AppIdentityDbContext context, UserManager<AppUser> userManager, ILogger<HomeController> logger)
     {
@@ -29,6 +30,7 @@ public class HomeController : Controller
         {
             return RedirectToAction("Auth");
         }
+        ViewData["MaxGrain"] = user.BarnLevel * MaxGrainMultiplier;
         return View(user);
     }
 
@@ -81,6 +83,16 @@ public class HomeController : Controller
     }
 
     public ActionResult Market()
+    {
+        return View();
+    }
+    
+
+    public ActionResult Roulette()
+    {
+        return View();
+    }
+    public ActionResult Roulette2()
     {
         return View();
     }

@@ -1,0 +1,96 @@
+﻿@{
+Layout = "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/css/Roulette.css" rel="stylesheet" />
+    <title>Random</title>
+</head>
+<body>
+
+    <div class="app">
+        <div class="scopeHidden">
+            <ul>
+
+            </ul>
+        </div>
+        <img class="pointer" src="~/icons/Pointer.png" alt="|" >
+
+        <button id="btn" class="btn" onclick="start()">Крутить</button>
+    </div>
+
+    <script>
+        var selectedItem;
+           fetch("/Api/Roulette/Items")
+           .then(response => {
+               if (!response.ok)
+                   throw new Error(`HTTP error! Status: ${response.status}`);
+               else
+                   return response.json();
+           })
+           .then(data => {
+               const items = data['items'];
+               const selectedIndex = Math.floor(Math.random() * items.length);
+                for (let i = 0; i < 45; i++) {
+                const random = Math.floor(Math.random() * items.length)
+                const cellColor = (i % 2) ? 'middle' : ''
+
+             document.querySelector('.scopeHidden > ul').innerHTML += `
+                <li class="roulette-item ${cellColor}" id="${items[random]}">
+                    <img src="/icons/${items[random]}.png" />
+                    <span>${items[random]}</span>
+                </li>
+             `;
+           }
+        });
+
+
+
+           // Создаеться константа move в которой, в пикселях, вычисляем отступ необходимый
+           // для списка чтобы тот в свою очередь сдвинулся на n-ое кол-во пикселей
+
+           // Далее для более простой читабельности я использовал function expresion
+           // elm и elms которые просто заменяли мне querySelector и querySelectorAll
+
+           // В константе index я учел что мы начинаем не с первой ячейки а с середины, а середина
+           // в свою очередь может быть разной исходя и размера блока, после монипуляций я возвращаю
+           // в index не отступы, а ячейку которую в будущем смогу изменить или взять с нее значения
+
+           // В этом случае я просто поменял ей цвет на красный
+
+        function start() {
+            const elm = (str) => document.querySelector(str);
+            const elms = (str) => document.querySelectorAll(str);
+            const move = -150 * 35;
+            document.getElementById("btn").disabled = true;
+
+            fetch("/Api/Roulette/Spin")
+                .then(result => {
+                    if (!result.ok)
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    else
+                        return result.json();
+                })
+                .then(data => {
+                    selectedItem = data.result;
+                    console.log(selectedItem);   
+
+                    elm('.scopeHidden > ul').style.left = move + 'px';
+
+                    const index = -Math.floor((move + (elm('.scopeHidden').offsetWidth / 2) / -150) / 150) + 1;
+
+                    elms('.scopeHidden > ul > li')[index].innerHTML =
+                        `<img src="/icons/${selectedItem}.png" />
+                        <span>${selectedItem}</span>`;
+                    elms('.scopeHidden > ul > li')[index].style.background = 'red';
+                });                     
+               
+        };
+
+    </script>
+</body>
+</html>

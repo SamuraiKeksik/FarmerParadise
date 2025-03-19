@@ -4,6 +4,7 @@ using FarmerParadiseTelegramMiniApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmerParadiseTelegramMiniApp.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    partial class AppIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317105703_AppUser_BuildingsProperties_Added")]
+    partial class AppUser_BuildingsProperties_Added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,9 +60,6 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsGameAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRouletteAvailable")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")

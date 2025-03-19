@@ -4,6 +4,7 @@ using FarmerParadiseTelegramMiniApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmerParadiseTelegramMiniApp.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    partial class AppIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314194408_AppUser_PhotoUrlProperty_Changed")]
+    partial class AppUser_PhotoUrlProperty_Changed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,12 +36,18 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                     b.Property<long>("Aucts")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("BarnLevel")
+                    b.Property<long>("Chickens")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Eggs")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("EggsInIncubator")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -46,6 +55,9 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<long>("Fertilizer")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Fields")
                         .HasColumnType("bigint");
@@ -57,9 +69,6 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsGameAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRouletteAvailable")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -89,9 +98,6 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("RareGrain")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("ReferalLink")
                         .HasColumnType("nvarchar(max)");
 
@@ -101,18 +107,15 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                     b.Property<long>("SownFields")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("Tugrics")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<long>("Water")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("WaterTowerLevel")
-                        .HasColumnType("bigint");
 
                     b.Property<long>("Waxws")
                         .HasColumnType("bigint");
