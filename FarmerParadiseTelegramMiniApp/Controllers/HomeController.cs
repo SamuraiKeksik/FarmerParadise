@@ -10,8 +10,9 @@ namespace FarmerParadiseTelegramMiniApp.Controllers;
 [Authorize]
 public class HomeController : Controller
 {
+    uint grainPerField = 100;
     private readonly AppIdentityDbContext _context;
-    private UserManager<AppUser> _userManager;  
+    private readonly UserManager<AppUser> _userManager;  
     private readonly ILogger<HomeController> _logger;
     private const uint MaxGrainMultiplier = 100;
 
@@ -31,7 +32,23 @@ public class HomeController : Controller
             return RedirectToAction("Auth");
         }
         ViewData["MaxGrain"] = user.BarnLevel * MaxGrainMultiplier;
+        ViewData["GrainPerField"] = grainPerField;
         return View(user);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SowFields([FromForm] uint fieldsCount)
+    {        
+        var user = await _userManager.GetUserAsync(User);
+        var maxFields = uint.Min(user.Grain / grainPerField, user.Fields - user.SownFields);
+        if (fieldsCount > maxFields)
+            fieldsCount = maxFields;
+
+        user.SownFields += fieldsCount;
+        user.Grain -= fieldsCount * grainPerField;
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Index"); 
     }
 
     public IActionResult SubMap(int? mainNumber)
@@ -97,9 +114,14 @@ public class HomeController : Controller
         return View();
     }
 
-    public ActionResult Friends()
+    public async Task<IActionResult> Friends()
     {
-        return View();
+        var user = await _userManager.GetUserAsync(User); 
+        if (user == null)
+        {
+            return RedirectToAction("Auth");
+        }
+        return View(user);
     }
 
     public ActionResult Profile()

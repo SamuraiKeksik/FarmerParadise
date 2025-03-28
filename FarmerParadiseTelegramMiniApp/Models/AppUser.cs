@@ -18,7 +18,9 @@ namespace FarmerParadiseTelegramMiniApp.Models
         public bool IsGameAvailable { get; set; }
         public bool IsRouletteAvailable { get; set; }
         public bool IsAdditionalGameAvailable { get; set; }
-        public string? ReferalLink { get; set; }
+        public string ReferralLink { get; set; }
+        public int InvitedReferralsCount { get; set; }
+        public bool HasReferral { get; set; }
         public string PhotoUrl { get; set; }
     }
 }

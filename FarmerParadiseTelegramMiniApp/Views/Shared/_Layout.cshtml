@@ -4,27 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/Roulette.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
 </head>
-<body class="bg-black text-white p-4">
 
-    <div class="container mx-auto">
-        @RenderBody()  <!-- ОБЯЗАТЕЛЬНО ДОЛЖНО БЫТЬ! -->
-    </div>
+<body class=" bg-black text-white p-4 ">
 
-    <!-- Навигация -->
-    <div class="fixed bottom-0 left-0 w-full bg-black p-4 flex justify-around border-t border-gray-700">
-        <a href="@Url.Action("Index", "Home")" class="flex flex-col items-center text-gray-400">🌾<span class="text-sm">Поле</span></a>
-        <a href="@Url.Action("Auctions", "Home")" class="flex flex-col items-center text-gray-400">🏆<span class="text-sm">Аукционы</span></a>
-        <a href="@Url.Action("Market", "Home")" class="flex flex-col items-center text-gray-400">📈<span class="text-sm">Рынок</span></a>
-        <a href="@Url.Action("Friends", "Home")" class="flex flex-col items-center text-gray-400">👥<span class="text-sm">Друзья</span></a>
-        <a href="@Url.Action("Profile", "Home")" class="flex flex-col items-center text-gray-400">
-            <img src="~/icons/Waxws.png" alt="Waxw" class="w-6 h-6">
-            <span class="text-sm">Waxw</span>
-        </a>
+    <main class="container">
+        @RenderBody()
+
+        @RenderSection("scripts", required: false) <!-- Добавлено для рендеринга скриптов -->
 
 
-    </div>
-    @RenderSection("scripts", required: false) <!-- Добавлено для рендеринга скриптов -->
+        <div class="fixed-bottom bg-dark p-3 border-top border-secondary">
+            <div class="d-flex justify-content-around">
+                <a href="@Url.Action("Index", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                    <span>🌾</span>
+                    <small>Поле</small>
+                </a>
+                <a href="@Url.Action("Auctions", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                    <span>🏆</span>
+                    <small>Аукционы</small>
+                </a>
+                <a href="@Url.Action("Market", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                    <span>📈</span>
+                    <small>Рынок</small>
+                </a>
+                <a href="@Url.Action("Friends", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                    <span>👥</span>
+                    <small>Друзья</small>
+                </a>
+                <a href="@Url.Action("Profile", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                    <img src="~/icons/Waxws.png" alt="Waxw" width="24" height="24">
+                    <small>Waxw</small>
+                </a>
+            </div>
+        </div>
+    </main>
+
 </body>
 </html>

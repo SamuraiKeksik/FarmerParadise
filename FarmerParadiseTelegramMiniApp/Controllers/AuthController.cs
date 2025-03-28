@@ -31,54 +31,56 @@ namespace FarmerParadiseTelegramMiniApp.Controllers
         [HttpPost]
         public async Task<ObjectResult> Login([FromBody] TelegramInitData initData)
         {
-            //await _signInManager.SignOutAsync();
-            //var user = _context.Users.First();
-            //await _signInManager.SignInAsync(user, true);
-            //return Ok(new { Message = "Authenticated"});
+            await _signInManager.SignOutAsync();
+            var user = _context.Users.First();
+            await _signInManager.SignInAsync(user, true);
+            return Ok(new { Message = "Authenticated" });
 
-            if (string.IsNullOrEmpty(initData.InitData))
-                return BadRequest("InitData is missing.");
+            //if (string.IsNullOrEmpty(initData.InitData))
+            //    return BadRequest("InitData is missing.");
 
-            // Разбираем initData
-            var parsedData = ParseInitData(initData.InitData);
+            //// Разбираем initData
+            //var parsedData = ParseInitData(initData.InitData);
 
-            // Проверяем подпись
-            if (!ValidateInitData(parsedData))
-                return Unauthorized("Invalid signature.");
+            //// Проверяем подпись
+            //if (!ValidateInitData(parsedData))
+            //    return Unauthorized("Invalid signature.");
 
-            // Получаем данные пользователя
-            var parsedUser = JObject.Parse(parsedData["user"]).ToObject<TelegramUser>();
-            var user = await _userManager.FindByIdAsync(parsedUser.Id.ToString());
-            if (user != null)
-            {
-                await _signInManager.SignOutAsync();
+            //// Получаем данные пользователя
+            //var parsedUser = JObject.Parse(parsedData["user"]).ToObject<TelegramUser>();
+            //var user = await _userManager.FindByIdAsync(parsedUser.Id.ToString());
+            //if (user != null)
+            //{
+            //    await _signInManager.SignOutAsync();
 
-                user.PhotoUrl = parsedUser.Photo_Url;
-                await _userManager.UpdateAsync(user);
-                await _signInManager.SignInAsync(user, true);
-                return Ok(new { Message = "Authenticated" });
-            }
+            //    user.PhotoUrl = parsedUser.Photo_Url;
+            //    await _userManager.UpdateAsync(user);
+            //    await _signInManager.SignInAsync(user, true);
+            //    return Ok(new { Message = "Authenticated" });
+            //}
 
-            else
-            {
-                AppUser newUser = new AppUser()
-                {
-                    Id = parsedUser.Id.ToString(),
-                    UserName = parsedUser.Username,
-                    PhotoUrl = parsedUser.Photo_Url,
-                };
-                IdentityResult result = await _userManager.CreateAsync(newUser);
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignOutAsync();
-                    await _signInManager.SignInAsync(newUser, true);
-                    return Ok(new { Message = "Authenticated" });
-                }
-                else
-                {
-                    return BadRequest("Can't create account");
-                }
-            }
+            //else
+            //{
+            //    AppUser newUser = new AppUser()
+            //    {
+            //        Id = parsedUser.Id.ToString(),
+            //        UserName = parsedUser.Username,
+            //        PhotoUrl = parsedUser.Photo_Url,
+            //        ReferralLink = Guid.NewGuid().ToString(),
+            //        InvitedReferralsCount = 0,
+            //    };
+            //    IdentityResult result = await _userManager.CreateAsync(newUser);
+            //    if (result.Succeeded)
+            //    {
+            //        await _signInManager.SignOutAsync();
+            //        await _signInManager.SignInAsync(newUser, true);
+            //        return Ok(new { Message = "Authenticated" });
+            //    }
+            //    else
+            //    {
+            //        return BadRequest("Can't create account");
+            //    }
+            //}
         }
 
         private static Dictionary<string, string> ParseInitData(string initData)

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model AppUser
+@{
     ViewData["Title"] = "Друзья";
 }
 
@@ -9,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Друзья</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="~/js/referral.js"></script>
 </head>
 <body class="bg-gray-900 text-white p-6">
     <div class="max-w-md mx-auto space-y-6 text-center">
@@ -24,7 +26,19 @@
             <div class="mb-4 p-4 bg-orange-700 rounded-lg">
                 <p class="text-sm font-bold">Приглашай друзей </p>
                 <p class="text-lg font-bold">💰 10 Waxw за каждого друга</p>
+                <p class="text-lg font-bold">@Model.ReferralLink</p>
             </div>
+
+            @if(!Model.HasReferral)
+            {
+                <div class="mb-4 p-4 bg-orange-700 rounded-lg">
+                    <input type="text" id="sendInput" placeholder="Введите адрес..." class="w-full p-2 rounded-lg bg-gray-900 text-white">
+                    <button id="sendButton" onclick="send()" class="bg-green-500 hover:bg-green-600 transition px-5 py-3 rounded-lg w-full font-semibold shadow-md flex items-center justify-center">
+                        дать рефералу плюшки
+                        <span class="ml-2"></span>
+                    </button>
+                </div>
+            }
             
         </div>
 

@@ -1,285 +1,197 @@
 ﻿@model AppUser
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="~/css/Roulette.css" rel="stylesheet" />
-    <title>Telegram Mini App</title>
-</head>
-<body class="bg-gray-900 text-white p-6">
-
-    <!-- Рулетка -->
-    <div class="app" hidden>
-        <div class="scopeHidden">
-            <ul>
-            </ul>
+<!-- Модальное окно рулетки-->
+<div id="roulette-modal" class="fixed-top w-100 h-100 bg-black bg-opacity-50 d-none">
+    <div class="bg-dark-custom m-5 p-4 rounded ">
+        <div class="row text-center">
+            <button type="button" class="btn-close btn-close-white position-relative start-0 invisible"></button>
+            <h2  class="mb-4 col">
+                <strong>
+                    Твой приз!
+                </strong>
+            </h2>
+            <!-- Кнопка закрытия -->
+            <button type="button" id="closeRouletteButton" class="btn-close btn-close-white position-relative end-0 invisible" aria-label="Close" onclick="closeRouletteModal()"></button>
         </div>
-        <img class="pointer" src="~/icons/Pointer.png" alt="|">
-
-        <button id="btn" class="btn" onclick="start()">Крутить</button>
-    </div>  
-
-
-    <div class="max-w-md mx-auto space-y-6">
-        <!-- Баланс -->
-        <div class="flex items-center justify-between bg-gray-800 p-4 rounded-lg shadow-md">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10">
-                    <img src="@Model.PhotoUrl" />
-                </div>
-                <div>
-                    <p class="text-gray-400 text-sm">Баланс</p>
-                    <p class="text-2xl font-bold">@Model.Waxws Waxw's</p>
-                </div>
+        <!-- Рулетка -->
+        <div class="app text-center">
+            <div class="scopeHidden">
+                <ul class="m-0 p-0">
+                </ul>
             </div>
+            <button id="btn" class="btn btn-primary mt-3" onclick="startRoulette()">Крутить</button>
         </div>
 
-        <!-- Мои игровые элементы -->
-        <div class="bg-gray-800 p-5 rounded-lg shadow-lg">
-            <h2 class="text-xl font-bold mb-4">Мои игровые элементы</h2>
+    </div>
+</div>
 
-            <!-- Поля -->
-            <div class="mb-4">
-                <p class="text-lg font-semibold">Поля</p>
-                <p class="text-gray-400 text-sm">Всего: @Model.Fields | Засеяно: @Model.SownFields</p>
-                <button class="bg-green-500 hover:bg-green-600 transition px-5 py-2 rounded-lg mt-3 w-full font-semibold shadow-md" id="plant-button">Засеять</button>
-            </div>
-            <!-- Модальное окно выбора культуры -->
-            <div id="plant-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-96 relative">
-                    <!-- Кнопка закрытия -->
-                    <button class="absolute top-2 right-2 text-white text-xl" onclick="closePlantModal()">&times;</button>
-                    <h2 class="text-xl font-bold mb-4">Выбор культуры</h2>
-                    <div class="space-y-4">
-                        <div class="bg-green-700 p-4 rounded-lg flex justify-between items-center">
-                            <div>
-                                <p class="font-semibold">Пшеница</p>
-                                <p class="text-sm text-gray-300">созревает </p>
-                                <p class="text-sm text-gray-300">Событие: засуха</p>
-                                <div class="grid grid-cols-9 gap-1 mt-2">
-                                    <!-- 72 мини-прямоугольника -->
-                                    <div class="w-2 h-2 bg-gray-400" style="animation: blink 1.5s infinite alternate"></div>
-                                </div>
 
-                            </div>
-                            <div class="flex items-center">
-                                <p class="text-lg font-bold mr-2">"289"</p>
-                                <button class="bg-blue-500 text-white px-2 py-1 rounded-full text-sm" onclick="openSeedModal()">+</button>
-                            </div>
-                        </div>
-                        <!-- пустое -->
-                        <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
-                            <div>
-                                <p class="font-semibold">Пшеница</p>
-                                <p class="text-sm text-gray-300">3 дня на созревания</p>
-                                <p class="text-sm text-gray-300">Событие: тишина</p>
-                                <div class="grid grid-cols-9 gap-1 mt-2">
-                                    <!-- 72 мини-прямоугольника -->
-                                    <div class="w-2 h-2 bg-gray-400" style="animation: blink 1.5s infinite alternate"></div>
-                                </div>
+<!-- Баланс -->
+<div class="row bg-dark-custom rounded d-flex align-items-center">
+    <div class="col-3 p-3">
+        <img class="img-fluid rounded" src="@Model.PhotoUrl" />
+    </div>
+    <div class="col-9 p-1">
+        <p class="m-0 text-gray">Баланс</p>
+        <p class="m-0 text-white">
+            <strong>
+                @Model.Waxws Waxws
+            </strong>
+        </p>
+    </div>
+</div>
 
-                            </div>
-                            <div class="flex items-center">
-                                <p class="text-lg font-bold mr-2"> 100</p>
-                                <button class="bg-blue-500 text-white px-2 py-1 rounded-full text-sm" onclick="openSeedModal()">+</button>
-                            </div>
+<!-- Мои игровые элементы -->
+<div class="row bg-dark-custom rounded d-flex align-items-center mt-3">
+    <h2 class="mt-3 header-white text-center">
+        <strong>
+            Мои игровые элементы
+        </strong>
+    </h2>
+
+    <!-- Поля -->
+    <div class="mt-2 mb-2">
+        <p class="mb-0 text-white">
+            <strong>
+                Поля
+            </strong>
+        </p>
+        <p class="text-gray">Всего: @Model.Fields | Засеяно: @Model.SownFields</p>
+        <button class="btn btn-success w-100 text-white" id="plant-button">
+            Засеять поля
+        </button>
+    </div>
+
+    <!-- Зерно -->
+    <div class="mt-2 mb-2">
+        <p class="mb-0">
+            <strong>
+                Зерно
+            </strong>
+        </p>
+        <p class="text-gray mb-0">
+            Обычное: @Model.Grain | Редкое: @Model.RareGrain
+        </p>
+        <p class="text-gray mb-0">
+            Максимум: @ViewData["MaxGrain"]
+        </p>
+    </div>
+
+    <!-- Вода -->
+    <div class="mt-2 mb-2">
+        <p class="mb-0"><strong>Вода</strong></p>
+        <p class="text-gray mb-0">Вода: @Model.Water</p>
+    </div>
+
+    <!-- Постройки -->
+    <div class="mt-2 mb-3">
+        <p class="mb-0"><strong>Постройки</strong></p>
+        <p class="text-gray mb-0">Амбар: @Model.BarnLevel уровень</p>
+        <p class="text-gray mb-0">Водонапорная башня: @Model.WaterTowerLevel уровень</p>
+    </div>
+</div>
+
+<!-- Сезон -->
+<div class="row bg-dark-custom rounded mt-3 text-center">
+    <h3 class="mt-3 mb-0 header-white">Сезон Весна начался!</h3>
+    <p class="text-gray">Новые события ждут вас!</p>
+</div>
+
+<!-- Играть -->
+<div class="row mt-3 align-middle">
+    <div class="col-8 p-0 pe-2">
+        <button id="play-button1" class="btn btn-primary w-100 pt-3'
+            @(Model.IsGameAvailable ? "" : "disabled")">
+        
+            <p class="mb-0 text-white "><strong>Играть</strong></p>
+            <p class="text-white ">Попытки: @(Model.IsGameAvailable ? "1" : "0")/1</p>
+        </button>
+    </div>
+    <div class="col-4 p-0">
+        <button id="play-button2" class=" btn btn-secondary w-100 pt-3
+                @(Model.IsAdditionalGameAvailable ? "" : "disabled")">           
+        
+            
+            <p class="mb-0 text-white"><strong>Доп. попытка</strong></p>
+            <p class="text-white ">Попытки:@(Model.IsAdditionalGameAvailable ? "1" : "0")/1</p>
+        </button>
+    </div>
+
+</div>
+
+
+<!-- Модальное окно выбора культуры -->
+<div id="plant-modal" class="fixed-top w-100 h-100 bg-black bg-opacity-50 d-none">
+    <div class="bg-dark-custom m-5 p-4 rounded ">        
+        <div class="row">
+            <h2 class="mb-4 col-11">
+                <strong>
+                    Выбор культуры
+                </strong>
+            </h2>
+            <!-- Кнопка закрытия -->
+            <button type="button" class="btn-close btn-close-white col-1" aria-label="Close" onclick="closePlantModal()"></button>
+        </div>
+
+        <div class="container">
+            <div class="rounded-lg flex justify-between items-center">
+                <div class="bg-success rounded p-2 row align-items-center">
+                    <div class="col-8 mt-2">
+                        <p class="mb-0 text-white "><strong>Пшеница</strong></p>
+                        <p class="text-white mb-0">созревает </p>
+                        <p class="text-white">Событие: засуха</p>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <p class="mb-0 col header-white">"289"</p>
+                            <button class="p-0 me-1 col btn btn-primary rounded-circle" onclick="openSeedModal()">+</button>
                         </div>
                     </div>
-                    <button class="bg-yellow-500 hover:bg-yellow-600 transition px-5 py-2 rounded-lg mt-4 w-full font-semibold shadow-md" id="Auctions">Расширить поля на аукцион</button>
                 </div>
             </div>
-
-            <!-- Всплывающее окно выбора количества зерна -->
-            <div id="seed-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-80">
-                    <h2 class="text-xl font-bold mb-4">Выбор количества зерна</h2>
-                    <p class="text-gray-300">Поле: #1</p>
-                    <p class="text-gray-300">Зерно у вас: <span id="seed-count">50</span></p>
-                    <input type="range" id="seed-slider" min="0" max="50" value="0" class="w-full mt-2">
-                    <p class="text-lg font-bold text-center mt-2" id="selected-seed">0</p>
-                    <button class="bg-green-500 hover:bg-green-600 transition px-5 py-2 rounded-lg mt-4 w-full font-semibold shadow-md" onclick="closeSeedModal()">OK</button>
+            <!-- пустое -->
+            <div class="mt-3 rounded-lg flex justify-between items-center">
+                <div class="bg-secondary rounded p-2 row align-items-center">
+                    <div class="col-8 mt-2">
+                        <p class="mb-0 text-white "><strong>Пшеница</strong></p>
+                        <p class="text-white mb-0">созревает </p>
+                        <p class="text-white">Событие: засуха</p>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <p class="mb-0 col header-white">100</p>
+                            <button class="p-0 me-1 ms-3 col btn btn-primary rounded-circle" onclick="openSeedModal()">+</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <script>
-                function closePlantModal() {
-                document.getElementById('plant-modal').classList.add('hidden');
-                }
-            </script>
-
-
-            <!-- Зерно -->
-            <div class="mb-4">
-                <p class="text-lg font-semibold">Зерно</p>
-                <p class="text-gray-400 text-sm">Обычное: @Model.Grain | Редкое: @Model.RareGrain</p>
-                <p class="text-gray-400 text-sm">Максимум: @ViewData["MaxGrain"]</p>
-            </div>
-
-            <!-- Вода -->
-            <div class="mb-4">
-                <p class="text-lg font-semibold">Вода</p>
-                <p class="text-gray-400 text-sm">Вода: @Model.Water</p>                
-            </div>
-
-            <!-- Постройки -->
-            <div class="mb-4">
-                <p class="text-lg font-semibold">Постройки</p>
-                <p class="text-gray-400 text-sm">Амбар: @Model.BarnLevel уровень</p>
-                <p class="text-gray-400 text-sm">Водонапорная башня: @Model.WaterTowerLevel уровень</p>
             </div>
         </div>
 
-        <!-- Сезон -->
-        <div class="bg-gray-800 p-4 rounded-lg text-center shadow-md">
-            <h3 class="text-lg font-semibold">Сезон Весна начался!</h3>
-            <p class="text-gray-400 text-sm">Новые события ждут вас!</p>
-        </div>
-
-        <!-- Играть -->
-        <div class="flex justify-center gap-2">
-            
-            
-                <button id="play-button1" class="col bg-purple-500 hover:bg-purple-600 transition px-6 py-3 rounded-lg text-white text-lg font-bold shadow-md w-full"
-                    @(!Model.IsGameAvailable ? "disabled" : string.Empty)>
-            
-                    <p class="text-white text-md-center">Играть</p>
-                    <p class="text-white text-sm mt-2">Попытки: @(Model.IsGameAvailable ? "1" : "0")/1</p>
-                </button>
-                <button id="play-button2" class="col bg-blue-500 hover:bg-blue-600 transition px-4 py-5 rounded-lg text-white text-lg font-bold shadow-md w-1/3"
-                    @(!Model.IsAdditionalGameAvailable ? "disabled" : string.Empty)>
-                
-                    <p class="text-white text-sm-center">Доп.попытка</p>
-                    <p class="text-white text-sm mt-2">Попытки: @(Model.IsAdditionalGameAvailable ? "1" : "0")/1</p>
-                </button>
-            </div> 
-        
-
-        <!-- Навигация -->
-        @* <div class="bottom-0 left-0 w-full bg-gray-800 p-4 flex justify-around border-t border-gray-700 shadow-lg">
-            <a href="#" class="flex flex-col items-center text-gray-300 hover:text-white transition">🌾<span class="text-sm">Поле</span></a>
-            <a href="#" class="flex flex-col items-center text-gray-300 hover:text-white transition">🏆<span class="text-sm">Аукционы</span></a>
-            <a href="#" class="flex flex-col items-center text-gray-300 hover:text-white transition">📈<span class="text-sm">Рынок</span></a>
-            <a href="#" class="flex flex-col items-center text-gray-300 hover:text-white transition">👥<span class="text-sm">Друзья</span></a>
-            <a href="#" class="flex flex-col items-center text-gray-300 hover:text-white transition">👤<span class="text-sm">Профиль</span></a>
-        </div> *@
+        <button class="bg-warning rounded mt-3 p-2 w-100 " id="Auctions">Расширить поля на аукцион</button>
     </div>
-    <script>
-        const elm = (str) => document.querySelector(str);
-        const elms = (str) => document.querySelectorAll(str);
+</div>
 
-        fetch("/Api/Roulette/CanPlayRoulette")
-        .then(response =>
-        {
-            console.log(response);
-            if(!response.ok)
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            else 
-                return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            console.log(data["canPlay"]);
-            if(data["canPlay"] == true)
-                elm(".app").hidden = false;
-                
-        });
-        var selectedItem;
-           fetch("/Api/Roulette/Items")
-           .then(response => {
-               if (!response.ok)
-                   throw new Error(`HTTP error! Status: ${response.status}`);
-               else
-                   return response.json();
-           })
-           .then(data => {
-               const items = data['items'];
-               const selectedIndex = Math.floor(Math.random() * items.length);
-                for (let i = 0; i < 45; i++) {
-                const random = Math.floor(Math.random() * items.length)
-                const cellColor = (i % 2) ? 'middle' : ''
-
-             document.querySelector('.scopeHidden > ul').innerHTML += `
-                <li class="roulette-item ${cellColor}" id="${items[random]}">
-                    <img src="/icons/${items[random]}.png" />
-                    <span>${items[random]}</span>
-                </li>
-             `;
-           }
-        });
-
-           // Создаеться константа move в которой, в пикселях, вычисляем отступ необходимый
-           // для списка чтобы тот в свою очередь сдвинулся на n-ое кол-во пикселей
-
-           // Далее для более простой читабельности я использовал function expresion
-           // elm и elms которые просто заменяли мне querySelector и querySelectorAll
-
-           // В константе index я учел что мы начинаем не с первой ячейки а с середины, а середина
-           // в свою очередь может быть разной исходя и размера блока, после монипуляций я возвращаю
-           // в index не отступы, а ячейку которую в будущем смогу изменить или взять с нее значения
-
-           // В этом случае я просто поменял ей цвет на красный
-
-        function start() {            
-            const move = -150 * 35;
-            document.getElementById("btn").disabled = true;
-
-            fetch("/Api/Roulette/Spin")
-                .then(result => {
-                    if (!result.ok)
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    else
-                        return result.json();
-                })
-                .then(data => {
-                    selectedItem = data.result;
-                    console.log(selectedItem);
-
-                    elm('.scopeHidden > ul').style.left = move + 'px';
-
-                    const index = -Math.floor((move + (elm('.scopeHidden').offsetWidth / 2) / -150) / 150) + 1;
-
-                    elms('.scopeHidden > ul > li')[index].innerHTML =
-                        `<img src="/icons/${selectedItem}.png" />
-                        <span>${selectedItem}</span>`;
-                    elms('.scopeHidden > ul > li')[index].style.background = 'red';
-                });
-
-        };
-
-    </script>
-    <script>
-        document.getElementById('play-button1').addEventListener('click', function () {
-            window.location.href = "/Home/Saper";
-        });
-        document.getElementById('play-button2').addEventListener('click', function () {
-            window.location.href = "/Home/Saper";
-        });
-        document.getElementById('Auctions').addEventListener('click', function () {
-            window.location.href = "/Home/Auctions";
-        });
-        document.getElementById('plant-button').addEventListener('click', function () {
-            document.getElementById('plant-modal').classList.remove('hidden');
-        });
-
-        document.getElementById('expand-fields').addEventListener('click', function () {
-            document.getElementById('plant-modal').classList.add('hidden');
-        });
-
-        function openSeedModal() {
-            document.getElementById('seed-modal').classList.remove('hidden');
+<!-- Всплывающее окно выбора количества зерна -->
+<div id="seed-modal" class="p-5 fixed-top w-100 h-100 bg-black bg-opacity-50 d-none">
+    <div class="bg-dark-custom m-5 p-4 rounded">
+        <h2 class="header-white mb-4">
+            <strong>Выбор количества зерна</strong>
+        </h2>
+        <p class="text-white mb-0">Полей: </p>
+        <p class="text-white">Зерно у вас: <span idw="seed-count">@Model.Grain</span></p>
+        @{
+            var minGrainForFields = uint.Min(Model.Fields - Model.SownFields, Model.Grain / Convert.ToUInt32(ViewData["grainPerField"]));
         }
+        <form asp-action="SowFields" method="post">
+            <input type="range" name="fieldsCount" id="seed-slider" min="0" max="@minGrainForFields" value="0" class="w-100 mt-2">
+            <p class="header-white text-center mt-2" id="selected-seed">0</p>
+            <button type="submit" class="btn btn-success w-100 text-white" onclick="closeSeedModal()">OK</button>
+        </form>
+        
+    </div>
+</div>
 
-        function closeSeedModal() {
-            document.getElementById('seed-modal').classList.add('hidden');
+        @section scripts{
+            <script src="~/js/index.js"></script>
+            <script src="~/js/roulette.js"></script>
         }
-
-        // Обновление количества зерна при перемещении ползунка
-        document.getElementById('seed-slider').addEventListener('input', function () {
-            document.getElementById('selected-seed').innerText = this.value;
-        });
-
-    </script>
-</body>
-</html>
