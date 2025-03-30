@@ -6,6 +6,7 @@ namespace FarmerParadiseTelegramMiniApp.Models
     {
         public uint Fields { get; set; }
         public uint SownFields { get; set; }
+        public DateTime? SownFieldsDateTime { get; set; }
         public uint Grain { get; set; }
         public uint RareGrain { get; set; }
         public uint Water { get; set; }
@@ -14,6 +15,9 @@ namespace FarmerParadiseTelegramMiniApp.Models
 
         public uint BarnLevel { get; set; }
         public uint WaterTowerLevel { get; set; }
+
+        public uint FieldEventId {  get; set; }
+        public FieldEvent FieldEvent { get; set; }
 
         public bool IsGameAvailable { get; set; }
         public bool IsRouletteAvailable { get; set; }

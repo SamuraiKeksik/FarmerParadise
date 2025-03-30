@@ -1,3 +1,5 @@
+using Coravel;
+using FarmerParadiseTelegramMiniApp.Coravel;
 using FarmerParadiseTelegramMiniApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,8 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+builder.Services.AddScheduler();
+builder.Services.AddTransient<DailyFieldEventTask>(); //Задача для расписания scheduler
 
 builder.Services.AddDbContext<AppIdentityDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -29,6 +33,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var app = builder.Build();
 app.UseCors("AllowAll");
+app.Services.UseScheduler(schedueler =>
+{
+    schedueler.Schedule<DailyFieldEventTask>().DailyAtHour(2); //Выполняется в 2 часа по UTC 
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

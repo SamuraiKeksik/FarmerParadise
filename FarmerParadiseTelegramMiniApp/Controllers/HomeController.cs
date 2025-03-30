@@ -4,6 +4,7 @@ using FarmerParadiseTelegramMiniApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace FarmerParadiseTelegramMiniApp.Controllers;
 
@@ -11,6 +12,8 @@ namespace FarmerParadiseTelegramMiniApp.Controllers;
 public class HomeController : Controller
 {
     uint grainPerField = 100;
+    uint waterPerField = 10;
+    uint yieldPerField = 130;
     private readonly AppIdentityDbContext _context;
     private readonly UserManager<AppUser> _userManager;  
     private readonly ILogger<HomeController> _logger;
@@ -31,8 +34,24 @@ public class HomeController : Controller
         {
             return RedirectToAction("Auth");
         }
+        user = _context.Users.Include(p => p.FieldEvent).First( x => x.Id == user.Id);
+        if (user.SownFieldsDateTime.HasValue && user.SownFieldsDateTime.Value.AddDays(1) < DateTime.Now)
+        {    
+            user.Grain += Convert.ToUInt32(user.SownFields * yieldPerField * user.FieldEvent.YieldModifier);
+            user.SownFields = 0;
+            user.SownFieldsDateTime = null;
+            var rand = new Random();
+            var allEvents = _context.FieldEvents.ToList();
+            user.FieldEvent = allEvents[rand.Next(allEvents.Count)];
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+        }
         ViewData["MaxGrain"] = user.BarnLevel * MaxGrainMultiplier;
-        ViewData["GrainPerField"] = grainPerField;
+        ViewData["GrainPerField"] = grainPerField * user.FieldEvent.SowGrainCostModifier;
+        ViewData["WaterPerField"] = waterPerField * user.FieldEvent.SowWaterCostModifier;
+        ViewData["YieldPerField"] = yieldPerField * user.FieldEvent.YieldModifier;
+
         return View(user);
     }
 
@@ -46,6 +65,8 @@ public class HomeController : Controller
 
         user.SownFields += fieldsCount;
         user.Grain -= fieldsCount * grainPerField;
+        if (user.SownFieldsDateTime == null)
+            user.SownFieldsDateTime = DateTime.Now;
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
         return RedirectToAction("Index"); 

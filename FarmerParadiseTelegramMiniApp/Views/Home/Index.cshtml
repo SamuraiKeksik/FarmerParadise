@@ -102,7 +102,7 @@
     <div class="col-8 p-0 pe-2">
         <button id="play-button1" class="btn btn-primary w-100 pt-3'
             @(Model.IsGameAvailable ? "" : "disabled")">
-        
+
             <p class="mb-0 text-white "><strong>Играть</strong></p>
             <p class="text-white ">Попытки: @(Model.IsGameAvailable ? "1" : "0")/1</p>
         </button>
@@ -110,8 +110,8 @@
     <div class="col-4 p-0">
         <button id="play-button2" class=" btn btn-secondary w-100 pt-3
                 @(Model.IsAdditionalGameAvailable ? "" : "disabled")">           
-        
-            
+
+
             <p class="mb-0 text-white"><strong>Доп. попытка</strong></p>
             <p class="text-white ">Попытки:@(Model.IsAdditionalGameAvailable ? "1" : "0")/1</p>
         </button>
@@ -135,37 +135,85 @@
 
         <div class="container">
             <div class="rounded-lg flex justify-between items-center">
-                <div class="bg-success rounded p-2 row align-items-center">
-                    <div class="col-8 mt-2">
-                        <p class="mb-0 text-white "><strong>Пшеница</strong></p>
-                        <p class="text-white mb-0">созревает </p>
-                        <p class="text-white">Событие: засуха</p>
+                @if(Model.SownFields < 1)
+                {
+                    <div class="bg-secondary rounded p-2 row text-center">
+                        <div class="mt-2">
+                            <p class="mb-1 text-white "><strong>Поля не засеяны</strong></p>
+                        </div>
+                        <div class="">
+                            <div class="text-center">
+                                <button class="p-2 m-0  btn btn-primary" onclick="openSeedModal()">Засеять поля</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <div class="row">
-                            <p class="mb-0 col header-white">"289"</p>
-                            <button class="p-0 me-1 col btn btn-primary rounded-circle" onclick="openSeedModal()">+</button>
+                }
+                else
+                {
+                    <div class="bg-success rounded p-2 row text-center">
+                        <div class="mt-2">
+                            <p class="mb-1 text-white "><strong>Поля созревают</strong></p>
+                            <p class="text-white mb-1">Урожай: @ViewData["YieldPerField"] зерна </p>
+                            <p class="text-white mb-1">Через: <span id="growTimeText">@((Model.SownFieldsDateTime.Value.AddDays(1) - DateTime.Now).ToString(@"hh\:mm\:ss"))</span><p>
+                        </div>
+                        <div class="">
+                            <div class="text-center">
+                                @if(Model.SownFields != Model.Fields)
+                                {
+                                    <button class="p-2 m-0  btn btn-primary" onclick="openSeedModal()">Засеять поля</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                }               
+            </div>
+            <div class="mt-2 ps-1 row align-items-center gap-1">
+                <!-- Зеленые квадраты - засеянные поля, серые - незасеянные -->
+                @for (int i = 0; i < Model.SownFields; i++)
+                {
+                    @:<div class="p-0 margin-xs col-1 bg-success" style="width: 10px; height:10px;"></div>
+                }
+                @for (int i = 0; i < Model.Fields - Model.SownFields; i++)
+                {
+                    @:<div class="p-0 margin-xs col-1 bg-secondary" style="width: 10px; height:10px;"></div>
+                }
+            </div>
+
+            <!-- Плохое событие -->
+            @if(!Model.FieldEvent.IsGoodEvent)
+            {
+                <div class="mt-3 rounded-lg flex justify-between items-center">
+                    <div class="bg-danger rounded p-2 row text-center">
+                        <div class=" mt-2">
+                            <p class="mb-0 text-white "><strong>@Model.FieldEvent.Name</strong></p>
+                            <p class="text-white mb-0">@Model.FieldEvent.Description</p>
+                            <p class="text-white mb-0">Нужно зерна для засеивания: @(Model.FieldEvent.SowGrainCostModifier * 100)%</p>
+                            <p class="text-white mb-0">Нужно воды для полива: @(Model.FieldEvent.SowWaterCostModifier * 100)%</p>
+                            <p class="text-white mb-0">Урожайность: @(Model.FieldEvent.YieldModifier * 100)%</p>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- пустое -->
-            <div class="mt-3 rounded-lg flex justify-between items-center">
-                <div class="bg-secondary rounded p-2 row align-items-center">
-                    <div class="col-8 mt-2">
-                        <p class="mb-0 text-white "><strong>Пшеница</strong></p>
-                        <p class="text-white mb-0">созревает </p>
-                        <p class="text-white">Событие: засуха</p>
-                    </div>
-                    <div class="col-4">
-                        <div class="row">
-                            <p class="mb-0 col header-white">100</p>
-                            <button class="p-0 me-1 ms-3 col btn btn-primary rounded-circle" onclick="openSeedModal()">+</button>
+            }
+            else if (Model.FieldEvent.Name != "None")
+            {
+                <div class="mt-3 rounded-lg flex justify-between items-center">
+                    <div class="bg-primary rounded p-2 row text-center">
+                        <div class=" mt-2">
+                            <p class="mb-0 text-white "><strong>@Model.FieldEvent.Name</strong></p>
+                            <p class="text-white mb-0">@Model.FieldEvent.Description</p>
+                            <p class="text-white mb-0">Нужно зерна для засеивания: @(Model.FieldEvent.SowGrainCostModifier * 100)%</p>
+                            <p class="text-white mb-0">Нужно воды для полива: @(Model.FieldEvent.SowWaterCostModifier * 100)%</p>
+                            <p class="text-white mb-0">Урожайность: @(Model.FieldEvent.YieldModifier * 100)%</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            }
+            
+
+           
+        </div> 
+        
 
         <button class="bg-warning rounded mt-3 p-2 w-100 " id="Auctions">Расширить поля на аукцион</button>
     </div>

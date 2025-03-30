@@ -11,39 +11,38 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
 </head>
 
-<body class=" bg-black text-white p-4 ">
+<body class=" bg-black text-white p-4 pb-5">
 
-    <main class="container">
+    <main class="container mb-5">
         @RenderBody()
 
         @RenderSection("scripts", required: false) <!-- Добавлено для рендеринга скриптов -->
 
-
-        <div class="fixed-bottom bg-dark p-3 border-top border-secondary">
-            <div class="d-flex justify-content-around">
-                <a href="@Url.Action("Index", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
-                    <span>🌾</span>
-                    <small>Поле</small>
-                </a>
-                <a href="@Url.Action("Auctions", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
-                    <span>🏆</span>
-                    <small>Аукционы</small>
-                </a>
-                <a href="@Url.Action("Market", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
-                    <span>📈</span>
-                    <small>Рынок</small>
-                </a>
-                <a href="@Url.Action("Friends", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
-                    <span>👥</span>
-                    <small>Друзья</small>
-                </a>
-                <a href="@Url.Action("Profile", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
-                    <img src="~/icons/Waxws.png" alt="Waxw" width="24" height="24">
-                    <small>Waxw</small>
-                </a>
-            </div>
-        </div>
+        
     </main>
-
+    <div class="fixed-bottom bg-dark p-2 border-top border-secondary">
+        <div class="d-flex justify-content-around">
+            <a href="@Url.Action("Index", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                <span>🌾</span>
+                <small>Поле</small>
+            </a>
+            <a href="@Url.Action("Auctions", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                <span>🏆</span>
+                <small>Аукционы</small>
+            </a>
+            <a href="@Url.Action("Market", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                <span>📈</span>
+                <small>Рынок</small>
+            </a>
+            <a href="@Url.Action("Friends", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                <span>👥</span>
+                <small>Друзья</small>
+            </a>
+            <a href="@Url.Action("Profile", "Home")" class="d-flex flex-column align-items-center text-white text-decoration-none">
+                <img src="~/icons/Waxws.png" alt="Waxw" width="24" height="24">
+                <small>Waxw</small>
+            </a>
+        </div>
+    </div>
 </body>
 </html>

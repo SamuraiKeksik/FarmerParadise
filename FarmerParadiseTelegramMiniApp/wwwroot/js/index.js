@@ -39,3 +39,23 @@ function closeRouletteModal() {
 $('#seed-slider').on('input', function () {
     $('#selected-seed').text($(this).val());
 });
+
+//Таймер выроста урожая
+var growTimeText = $("#growTimeText");
+setInterval(() => {
+    var timeMas = growTimeText.text().split(":");
+    var newDate = new Date();
+    newDate.setHours(timeMas[0]);
+    newDate.setMinutes(timeMas[1]);
+    newDate.setSeconds(timeMas[2]);
+
+    newDate.setSeconds(newDate.getSeconds() - 1);
+    var newHours = newDate.getHours();
+    var newMinutes = newDate.getMinutes();
+    var newSeconds = newDate.getSeconds();
+
+    if (newHours == 0 && newMinutes == 0 && newSeconds == 0)
+        location.reload();
+
+    growTimeText.text(newHours + ":" + newMinutes + ":" + newSeconds);
+}, 1000);

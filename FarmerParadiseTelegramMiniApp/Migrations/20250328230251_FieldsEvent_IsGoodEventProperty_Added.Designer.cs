@@ -4,6 +4,7 @@ using FarmerParadiseTelegramMiniApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmerParadiseTelegramMiniApp.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    partial class AppIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250328230251_FieldsEvent_IsGoodEventProperty_Added")]
+    partial class FieldsEvent_IsGoodEventProperty_Added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,10 +50,10 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<long>("FieldEventId")
+                    b.Property<long>("Fields")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("Fields")
+                    b.Property<long>("FieldsEventId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("Grain")
@@ -111,9 +114,6 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                     b.Property<long>("SownFields")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("SownFieldsDateTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -132,7 +132,7 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FieldEventId");
+                    b.HasIndex("FieldsEventId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -196,7 +196,7 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
                             Name = "Засуха",
                             SowGrainCostModifier = 1.0,
                             SowWaterCostModifier = 2.0,
-                            YieldModifier = 0.80000000000000004
+                            YieldModifier = 0.90000000000000002
                         });
                 });
 
@@ -335,13 +335,13 @@ namespace FarmerParadiseTelegramMiniApp.Migrations
 
             modelBuilder.Entity("FarmerParadiseTelegramMiniApp.Models.AppUser", b =>
                 {
-                    b.HasOne("FarmerParadiseTelegramMiniApp.Models.FieldEvent", "FieldEvent")
+                    b.HasOne("FarmerParadiseTelegramMiniApp.Models.FieldEvent", "FieldsEvent")
                         .WithMany()
-                        .HasForeignKey("FieldEventId")
+                        .HasForeignKey("FieldsEventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FieldEvent");
+                    b.Navigation("FieldsEvent");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

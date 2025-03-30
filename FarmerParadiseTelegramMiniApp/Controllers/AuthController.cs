@@ -67,7 +67,14 @@ namespace FarmerParadiseTelegramMiniApp.Controllers
             //        UserName = parsedUser.Username,
             //        PhotoUrl = parsedUser.Photo_Url,
             //        ReferralLink = Guid.NewGuid().ToString(),
+            //        BarnLevel = 1,
+            //        WaterTowerLevel = 1,
+            //        Grain = 200,
+            //        Water = 20,
+            //        Fields = 1,
+
             //        InvitedReferralsCount = 0,
+            //        FieldEventId = 1
             //    };
             //    IdentityResult result = await _userManager.CreateAsync(newUser);
             //    if (result.Succeeded)
